@@ -1,0 +1,60 @@
+<HTML>
+	<head>
+		<title>A Clicker</title>
+		<link rel="stylesheet" href="main.css">
+	</head>
+	
+	<body>
+		<div class="sectionLeft unselectable">
+			<center>
+				<div class="scoreContainer">
+					<span id="score">0</span> A<br>
+					<span id="SPS">0</span> A Per Second
+				</div>
+				<br>
+				<div class="clickerContainer">
+					<img src="images/A.png" height="256px" width="256px" onclick="Game.AddToScore(Game.ClickPower)">
+				</div>
+			</center>
+			
+			<div class="SectionFooter">
+				<h5></h5>
+			</div>
+		</div>	
+			
+		<div class="sectionRight unselectable">
+			<!--  <button onclick="BuyAlpha()">Alpha [<span id="AlphaCost">30</span>] -- <span id="Alphas">0</span></button>
+			<button onclick="BuyBeta()">Beta [<span id="BetaCost">100</span>] -- <span id="Betas">0</span></button>  -->
+			<div id="shopContainer">
+				<table class="shopButton" onclick="BuyAlpha()">
+					<td id="image"><img src="images/Alpha.png"></td>
+					<td id="nameAndCost">
+						<p>Alpha</p>
+						<p><span id="AlphaCost">30</span> A</p>
+					</td>
+					<td id="amount"><span id="Alphas">0</span></td>
+				</table>
+				<table class="shopButton" onclick="BuyBeta()">
+					<td id="image"><img src="images/Beta.png"></td>
+					<td id="nameAndCost">
+						<p>Beta</p>
+						<p><span id="BetaCost">100</span> A</p>
+					</td>
+					<td id="amount"><span id="Betas">0</span></td>
+				</table>
+			</div>
+			<div id="upgradeContainer">
+			
+			</div>
+			<table class="RstBttn" onclick="ResetGame()">
+				<td id="image"><img src="images/Reset.png"></td>
+				<td id="nameAndCost">
+					<p>Reset Everything</p>
+					<p><span>Resets</span> Everything</p>
+				</td>
+				<td id="amount"><span>!</span></td>
+			</table>
+		</div>
+		<script src="main.js"></script>
+	</body>
+</HTML>
