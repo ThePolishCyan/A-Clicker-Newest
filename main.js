@@ -3,12 +3,26 @@
 				totalClicks: 0,
 				totalScore: 0,
 				ClickPower: 1,
-				version: 1.0,
+				version: 1.1,
+				hoverUpgrade: -1,
+				lastClickTime: 0,
+				clickCooldown: 66.6667,
 				
 				AddToScore: function(amount) {
-					this.score += amount;
-					this.totalScore += amount;
-					display.updateScore();
+					var currentTime = Date.now();
+					var img = document.getElementById("clicker");
+					if (currentTime - Game.lastClickTime >= Game.clickCooldown) {
+						this.score += amount;
+						this.totalScore += amount;
+						display.updateScore();
+						Game.lastClickTime = currentTime
+						
+						img.classList.add("clicking")
+						
+						setTimeout(function() {
+							img.classList.remove("clicking");
+						}, 20)
+					}
 				},
 				
 				getSPS: function() {
@@ -23,20 +37,28 @@
 			var building = {
 				name: [
 					"Alpha",
-					"Beta"
+					"Beta",
+					"Gamma",
+					"Delta"
 				],
 				image: [
 					"Alpha.png",
-					"Beta.png"
+					"Beta.png",
+					"Gamma.png",
+					"Delta.png"
 				],
-				count: [0, 0],
+				count: [0, 0, 0, 0],
 				income: [
 					1,
-					4
+					4,
+					16,
+					64
 				],
 				cost: [
 					50,
-					175
+					300,
+					2000,
+					15500
 				],
 			
 				purchase: function(index) {
@@ -45,17 +67,87 @@
 							this.count[index]++;
 							this.cost[index] = Math.ceil(this.cost[index] * 1.10);
 							display.updateScore();
+							display.updateUpgrades();
 							display.updateShop();
 					}
 				}
 			};
 			
-			
+			var upgrade = {
+				name: [
+					"Tiny Alpha",
+					"Tiny Beta",
+					"Alpha Clicks"
+				],
+				description: [
+					"Alphas are twice as efficient",
+					"Betas are twice as efficient",
+					"Clicks are 4x more efficient"
+				],
+				image: [
+					"Alpha.png",
+					"Beta.png",
+					"AlphaClicks.png"
+				],
+				type: [
+					"building",
+					"building",
+					"click"
+				],
+				cost: [
+					250,
+					1000,
+					500
+					
+				],
+				buildingIndex: [
+					0,
+					1,
+					-1
+				],
+				requirement: [
+					5,
+					5,
+					100
+				],
+				bonus: [
+					2,
+					2,
+					4
+				],
+				purchased: [false, false, false],
+				
+				purchase: function(index) {
+					if (!this.purchased[index] && Game.score >= this.cost[index]) {
+						if (this.type[index] == "building" && building.count[this.buildingIndex[index]] >= this.requirement[index]) {
+							Game.score -= this.cost[index];
+							building.income[this.buildingIndex[index]] *= this.bonus[index];
+							this.purchased[index] = true;
+							
+							display.updateUpgrades();
+							display.updateScore();
+						} else if (this.type[index] == "click" && Game.totalClicks >= this.requirement[index]) {
+							Game.score -= this.cost[index];
+							Game.ClickPower *= this.bonus[index];
+							this.purchased[index] = true;
+							
+							display.updateUpgrades();
+							display.updateScore();
+						}
+						onmouseout="display.displayUpInfo(-1)"
+					}
+				}
+			};
 			
 			var display = {
 				updateScore: function() {
 					document.getElementById("score").innerHTML = Game.score;
 					document.getElementById("SPS").innerHTML = Game.getSPS();
+					document.getElementById("totalClicks").innerHTML = Game.totalClicks;
+					document.getElementById("scoreI").innerHTML = Game.score;
+					document.getElementById("totalScore").innerHTML = Game.totalScore;
+					document.getElementById("clickPower").innerHTML = Game.ClickPower;
+					document.getElementById("version").innerHTML = Game.version;
 					document.title = Game.score + " A - A Clicker";
 				},
 				
@@ -63,6 +155,31 @@
 					document.getElementById("shopContainer").innerHTML = "";
 					for (i = 0; i < building.name.length; i++) {
 						document.getElementById("shopContainer").innerHTML += '<table class="shopButton" onclick="building.purchase('+i+')"><td id="image"><img src="images/'+building.image[i]+'"></td><td id="nameAndCost"><p>'+building.name[i]+'</p><p><span>'+building.cost[i]+'</span> A</p></td><td id="amount"><span>'+building.count[i]+'</span></td></table>'
+					}
+				},
+				
+				updateUpgrades: function() {
+					document.getElementById("UpgradeContainer").innerHTML = "";
+					for (i = 0; i < upgrade.name.length; i++) {
+						if (!upgrade.purchased[i]) {
+							if (upgrade.type[i] == "building" && building.count[upgrade.buildingIndex[i]] >= upgrade.requirement[i]) {
+								document.getElementById("UpgradeContainer").innerHTML += '<img src="images/'+upgrade.image[i]+'" title="'+upgrade.name[i]+' &#10; '+upgrade.description[i]+' &#10; ('+upgrade.cost[i]+' A)" onclick="upgrade.purchase('+i+')" onmouseover="display.displayUpInfo('+i+')" onmouseout="display.displayUpInfo(-1)"/>';
+							} else if (upgrade.type[i] == "click" && Game.totalClicks >= upgrade.requirement[i]) {
+								document.getElementById("UpgradeContainer").innerHTML += '<img src="images/'+upgrade.image[i]+'" title="'+upgrade.name[i]+' &#10; '+upgrade.description[i]+' &#10; ('+upgrade.cost[i]+' A)" onclick="upgrade.purchase('+i+')" onmouseover="display.displayUpInfo('+i+')" onmouseout="display.displayUpInfo(-1)"/>';
+							}
+						}
+					}
+				},
+				displayUpInfo: function(index) {
+					if (index == -1) {
+						document.getElementById("upgradeCost").innerHTML = "";
+						document.getElementById("descUp").innerHTML = "an upgrade";
+						document.getElementById("titleUp").innerHTML = "hover over";
+					}
+					else {
+						document.getElementById("upgradeCost").innerHTML = ''+upgrade.cost[index]+' A';
+						document.getElementById("descUp").innerHTML = ''+upgrade.description[index]+'';
+						document.getElementById("titleUp").innerHTML = ''+upgrade.name[index]+'';
 					}
 				}
 			};
@@ -76,7 +193,8 @@
 					version: Game.version,
 					buildingCount: building.count,
 					buildingIncome: building.income,
-					buildingCost: building.cost
+					buildingCost: building.cost,
+					upgradePurchased: upgrade.purchased
 				};
 				localStorage.setItem("GameSave", JSON.stringify(GameSave));
 			};
@@ -102,7 +220,12 @@
 						for (i = 0; i < SavedGame.buildingIncome.length; i++) {
 							building.income[i] = SavedGame.buildingIncome[i]
 						}
-					}					
+					}
+					if (typeof SavedGame.upgradePurchased !== "undefined") {
+						for (i = 0; i < SavedGame.upgradePurchased.length; i++) {
+							upgrade.purchased[i] = SavedGame.upgradePurchased[i]
+						}
+					}
 				}
 			}
 			
@@ -113,6 +236,12 @@
 					location.reload();
 				}
 			}
+			
+			document.getElementById("clicker").addEventListener("click", function() {
+				Game.totalClicks++;
+				Game.AddToScore(Game.ClickPower);
+			}, false);
+			
 			setInterval(function() {
 				saveGame()
 			}, 15000);
@@ -121,6 +250,7 @@
 				loadGame();
 				display.updateScore();
 				display.updateShop();
+				display.updateUpgrades();
 			};
 			
 			setInterval(function() {
@@ -129,9 +259,15 @@
 				display.updateScore();
 			}, 1000);
 			
+			setInterval(function() {
+				display.updateScore();
+				display.updateUpgrades();
+			}, 1000);
+			
 			document.addEventListener("keydown", function(event) {
 				if (event.ctrlKey && event.which == 83) {
 					event.preventDefault();
-					SaveGame();
+					saveGame();
 				}
 			}, false);
+			

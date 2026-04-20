@@ -1,10 +1,28 @@
-.sectionLeft {
+			body {
+				margin: 0px 10px 0px 10px
+			}
+			
+			.sectionLeft {
 				float: left;
-				width: 80%;
+				width: 33%;
+				display: block;
+				overflow: auto;
+			}
+			.sectionMid {
+				height: 100vh;
+				float: left;
+				width: 30%;
+				background-color: rgb(200, 200, 200, 0.6);
+				margin: 0px 10px 0px 10px;
+				overflow-y: auto;
+				overflow-x: hidden;
+				display: block
 			}
 			.sectionRight {
 				float: right;
-				width: 20%;
+				width: 30%;
+				display: block;
+				overflow: auto;
 			}
 			.scoreContainer {
 				background-color: rgb(238, 238, 238, 0.6);
@@ -16,32 +34,34 @@
 			}
 			.clickerContainer img {
 				position: relative;
-				transition: all .2s ease-in-out;
+				transition: all .1s ease-in-out;
 			}
 			.clickerContainer img:hover { transform: scale(1.10); }
-			.clickerContainer IMG:active { transform: scale(1.12); }
+			.clickerContainer img.clicking { transform: scale(0.9); }
 			
 			.shopButton {
-				background-color: b5b5b5;
-				transition: all .2 ease-in-out
-				border-radius: 200px;
+				background-color: rgb(181, 181, 181, 1);
+				transition: all .2s ease-in-out;
+				border-radius: 5px;
 				width: 100%;
 				margin: 10px 0px 10px 0px;
 			}
 			.shopButton:hover {
-				background-color: c7c7c7;
+				background-color: rgb(199, 199, 199, 1);
 				transition: all .2s ease-in-out;
 			}
 			.shopButton #image {
 				width: 25%;
 			}
 			.shopButton img{
-				height: 64px;
-				width: 64px
+				height: auto;
+				width: 64px;
+				display: block;
+				margin: auto
 			}
 			.shopButton #nameAndCost p {
 				margin: 0px;
-				width: 60%;
+				width: 80%;
 			}
 			
 			.shopButton #nameAndCost p:first-of-type {
@@ -49,20 +69,21 @@
 			}
 			.shopButton #amount {
 				font-size: 48px;
-				color: 595959;
+				color: #595959;
 				font-family: roboto;
 				width:15%
 			}
 			
 			.RstBttn {
-				background-color: 770c0c;
-				transition: all .2 ease-in-out
-				border-radius: 200px;
+				background-color: #770c0c;
+				transition: all .2 ease-in-out;
+				border-radius: 5px;
 				width: 100%;
 				margin: 50px 0px 50px 0px;
+				text-align: center
 			}
 			.RstBttn:hover {
-				background-color: 560a0a;
+				background-color: #560a0a;
 				transition: all .2s ease-in-out;
 			}
 			.RstBttn #image {
@@ -92,4 +113,25 @@
 				-moz-user-select: none;
 				-ms-user-select: none;
 				user-select: none;
+			}
+			#UpgradeContainer img {
+				height: 64px;
+				width: 64px;
+			}
+			
+			.midStats {
+				margin: 0px 10px 0px 10px;
+				font: georgia;
+				overflow-x: hidden;
+				font-weight: bold;
+			}
+			
+			.midUpgradeInfo {
+				height: 100px;
+				margin: 10px 10px 10px 10px;
+				background-color: rgb(150, 150, 150, 1);
+				padding: 5px 5px 5px 5px;
+				font-size: 20px;
+				text-align: center;
+				font-weight: bold;
 			}
