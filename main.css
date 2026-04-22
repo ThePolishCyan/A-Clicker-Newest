@@ -34,7 +34,7 @@
 			}
 			.clickerContainer img {
 				position: relative;
-				transition: all .1s ease-in-out;
+				transition: all .07s ease-in-out;
 			}
 			.clickerContainer img:hover { transform: scale(1.10); }
 			.clickerContainer img.clicking { transform: scale(0.9); }
@@ -79,7 +79,7 @@
 				transition: all .2 ease-in-out;
 				border-radius: 5px;
 				width: 100%;
-				margin: 50px 0px 50px 0px;
+				margin: 50px 0px 5px 0px;
 				text-align: center
 			}
 			.RstBttn:hover {

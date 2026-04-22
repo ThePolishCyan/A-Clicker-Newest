@@ -9,20 +9,9 @@
 				clickCooldown: 66.6667,
 				
 				AddToScore: function(amount) {
-					var currentTime = Date.now();
-					var img = document.getElementById("clicker");
-					if (currentTime - Game.lastClickTime >= Game.clickCooldown) {
-						this.score += amount;
-						this.totalScore += amount;
-						display.updateScore();
-						Game.lastClickTime = currentTime
-						
-						img.classList.add("clicking")
-						
-						setTimeout(function() {
-							img.classList.remove("clicking");
-						}, 20)
-					}
+					this.score += amount;
+					this.totalScore += amount;
+					display.updateScore();
 				},
 				
 				getSPS: function() {
@@ -60,12 +49,18 @@
 					2000,
 					15500
 				],
-			
+				firstCost: [
+					50,
+					300,
+					2000,
+					15500
+				],
+				
 				purchase: function(index) {
 					if (Game.score >= this.cost[index]) {
 							Game.score -= this.cost[index];
 							this.count[index]++;
-							this.cost[index] = Math.ceil(this.cost[index] * 1.10);
+							this.cost[index] = Math.ceil(this.cost[index] * 1.6);
 							display.updateScore();
 							display.updateUpgrades();
 							display.updateShop();
@@ -211,9 +206,10 @@
 							building.count[i] = SavedGame.buildingCount[i]
 						}
 					}
-					if (typeof SavedGame.buildingCost !== "undefined") {
-						for (i = 0; i < SavedGame.buildingCost.length; i++) {
-							building.cost[i] = SavedGame.buildingCost[i]
+					for (let i = 0; i < building.name.length; i++) {
+						building.cost[i] = building.firstCost[i]
+						for (let j = 0; j < building.count[i]; j++) {
+							building.cost[i] = Math.ceil(building.cost[i] * 1.6);
 						}
 					}
 					if (typeof SavedGame.buildingIncome !== "undefined") {
@@ -238,8 +234,20 @@
 			}
 			
 			document.getElementById("clicker").addEventListener("click", function() {
-				Game.totalClicks++;
-				Game.AddToScore(Game.ClickPower);
+				var currentTime = Date.now();
+				var img = document.getElementById("clicker");
+				if (currentTime - Game.lastClickTime >= Game.clickCooldown) {
+					Game.totalClicks++;
+					Game.AddToScore(Game.ClickPower);
+					display.updateScore();
+					Game.lastClickTime = currentTime
+						
+					img.classList.add("clicking")
+						
+					setTimeout(function() {
+						img.classList.remove("clicking");
+					}, 10)
+				};
 			}, false);
 			
 			setInterval(function() {
